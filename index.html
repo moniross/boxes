@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Box Color Changer</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+  }
+  .box {
+    width: 60px;
+    height: 60px;
+    background-color: #ccc;
+    margin: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .box:hover {
+    border: 2px solid red;
+  }
+  .blue {
+    background-color: blue;
+    color: white;
+    font-size: 30px;
+  }
+  #resetBtn {
+    margin-bottom: 20px;
+    padding: 8px;
+  }
+  #gridSize {
+    padding: 8px;
+    margin-bottom: 3px;
+  }
+</style>
+</head>
+<body>
+
+<label for="gridSize">Choose grid size:</label>
+<select id="gridSize">
+    <option value="2">2x2</option>
+    <option value="3">3x3</option>
+    <option value="4">4x4</option>
+    <option value="5">5x5</option>
+    <option value="6">6x6</option>
+    <option value="7">7x7</option>
+    <option value="8">8x8</option>
+    <option value="9">9x9</option>
+</select>
+<button id="resetBtn">Reset</button>
+<div id="gridContainer" style="display: flex; flex-direction: column;"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const gridContainer = document.getElementById('gridContainer');
+    const resetBtn = document.getElementById('resetBtn');
+    const gridSizeSelect = document.getElementById('gridSize');
+    let counter = 1;
+    
+    // Function to create grid based on selected size
+    function createGrid(size) {
+      gridContainer.innerHTML = ''; // Clear previous grid
+      
+      for (let i = 0; i < size; i++) {
+        const row = document.createElement('div');
+        row.classList.add('row');
+        for (let j = 0; j < size; j++) {
+          const box = document.createElement('div');
+          box.classList.add('box');
+          row.appendChild(box);
+        }
+        gridContainer.appendChild(row);
+      }
+      
+      const boxes = document.querySelectorAll('.box');
+      boxes.forEach(box => {
+        box.addEventListener('click', function() {
+          if (this.classList.contains('blue')) {
+            return; // Do nothing if box is already blue
+          }
+          this.classList.add('blue');
+          this.innerText = counter++;
+        });
+      });
+    }
+    
+    // Function to reset all boxes to grey
+    function resetBoxes() {
+      const boxes = document.querySelectorAll('.box');
+      boxes.forEach(box => {
+        box.classList.remove('blue');
+        box.innerText = '';
+      });
+      counter = 1;
+    }
+    
+    // Event listener for reset button
+    resetBtn.addEventListener('click', resetBoxes);
+    
+    // Event listener for grid size selection
+    gridSizeSelect.addEventListener('change', function() {
+      const size = parseInt(this.value);
+      createGrid(size);
+    });
+    
+    // Initialize grid with default size
+    createGrid(parseInt(gridSizeSelect.value));
+  });
+</script>
+</body>
+</html>
